@@ -1,27 +1,49 @@
-version: '3.9'
+version: '3.7'
 
 services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: ''
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
   mongo:
-    image: mongo:latest
-    container_name: mongodb
+    image: mongo:4.2
     ports:
       - "27017:27017"
     volumes:
-      - mongo-data:/data/db
+      - mongo_data:/data/db
+
+  crud_service:
+    build:
+      context: ./crud_service
+    environment:
+      DB_HOST: db
+    depends_on:
+      - db
+    ports:
+      - "8001:8001"
+
+  api_gateway:
+    build:
+      context: ./api_gateway
+    depends_on:
+      - crud_service
+    ports:
+      - "8000:8000"
 
   image_service:
     build:
       context: ./image_service
-      dockerfile: Dockerfile
-    container_name: image_service
     depends_on:
       - mongo
     ports:
-      - "8001:8001"
-    volumes:
-      - ./image_service:/app
-    environment:
-      MONGO_URI: "mongodb://mongo:27017"
+      - "8002:8002"
 
 volumes:
-  mongo-data:
+  db_data:
+  mongo_data:

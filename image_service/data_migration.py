@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 # Load data from JSON file
 try:
-    with open('C:/Users/hasan/backend-bootcamp/backend-bootcamp/pokemon_api/db_manager/pokemons_data.json', 'r') as file:
+    with open('C:/Users/hasan/pokemon.project/db_manager/pokemons_data.json', 'r') as file:
         data = json.load(file)
     logger.info("Loaded data from pokemons.json")
 except FileNotFoundError:
