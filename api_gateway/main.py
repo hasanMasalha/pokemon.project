@@ -22,6 +22,7 @@ class Trainer(BaseModel):
 
 CRUD_SERVICE_URL = "http://localhost:8001"
 IMAGE_SERVICE_URL = "http://localhost:8002"
+BREEDING_SERVICE_URL ="http://localhost:8003"
 
 @app.get("/pokemons/")
 def get_pokemons_by_type(pokemon_type: str):
@@ -101,3 +102,11 @@ def get_image(pokemon_name: str):
         raise HTTPException(status_code=response.status_code, detail=response.text)
     return StreamingResponse(io.BytesIO(response.content), media_type=response.headers["content-type"])
        
+@app.post("/breed/{parent1_id}/{parent2_id}")
+def breed(parent1_id: int, parent2_id: int):
+    response = requests.post(f"{BREEDING_SERVICE_URL}/breed/{parent1_id}/{parent2_id}")
+    if response.status_code != 200:
+        raise HTTPException(status_code=response.status_code, detail=response.text)
+    return response.json()
+
+

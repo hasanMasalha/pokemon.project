@@ -15,7 +15,7 @@ def get_pokemons_by_type(pokemon_type: str):
             cursor.execute("SELECT name FROM pokemons WHERE type=%s", (pokemon_type,))
             result = cursor.fetchall()
         if not result:
-            raise HTTPException(status_code=404, detail="No pokemons found with the given type")
+            raise HTTPException(status_code=404, detail="No pokemons found with the given name")
         return [row[0] for row in result]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -39,6 +39,8 @@ def add_pokemon(pokemon: PokemonSchema):
     finally:
         connection.close()
 
+
+
 @pokemon_router.get("/pokemons/{pokemon_name}/trainers/")
 def get_trainers_of_pokemon(pokemon_name: str):
     connection = db.get_db_connection()
@@ -58,3 +60,35 @@ def get_trainers_of_pokemon(pokemon_name: str):
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         connection.close()
+
+
+@pokemon_router.get("/pokemon_id/{pokemon_id}")
+def get_pokemons_by_id(pokemon_id: int):
+    connection = db.get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT name FROM pokemons WHERE id=%s", (pokemon_id,))
+            result = cursor.fetchall()
+        if not result:
+            raise HTTPException(status_code=404, detail="No pokemons found with the given id")
+        return [row[0] for row in result]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        connection.close()
+
+@pokemon_router.get("/pokemon_type_id/{pokemon_id}")
+def get_pokemons_type_by_id(pokemon_id: int):
+    connection = db.get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT type FROM pokemons WHERE id=%s", (pokemon_id,))
+            result = cursor.fetchall()
+        if not result:
+            raise HTTPException(status_code=404, detail="No pokemons found with the given id")
+        return [row[0] for row in result]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        connection.close()
+
