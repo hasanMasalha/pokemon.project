@@ -24,6 +24,7 @@ CRUD_SERVICE_URL = "http://localhost:8001"
 IMAGE_SERVICE_URL = "http://localhost:8002"
 BREEDING_SERVICE_URL ="http://localhost:8003"
 
+
 @app.get("/pokemons/")
 def get_pokemons_by_type(pokemon_type: str):
     print(CRUD_SERVICE_URL)
